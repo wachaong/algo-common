@@ -1,10 +1,21 @@
 package com.autohome.adrd.algo.click_model.data;
 
+import java.io.DataInput;
+import java.io.DataOutput;
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
 import java.util.Scanner;
+import java.util.Vector;
+
+import org.apache.hadoop.io.Writable;
+
+import com.autohome.adrd.algo.click_model.utility.MyPair;
 
 
 
-public class Sample extends Features {
+public class Sample extends Features implements Writable {
 	private double label;
 
 	public Sample() {
@@ -53,6 +64,46 @@ public class Sample extends Features {
 		in.close();
 		
 		return sample;
+		
+	}
+
+
+	@Override
+	public void readFields(DataInput in) throws IOException {
+		//id_fea_vec=new Vector<Integer>();
+		//float_fea_vec=new Vector<MyPair<Integer,Double>>();
+		HashSet<String> id_fea_vec = new HashSet<String>();
+		HashMap<String, Double> float_fea_vec = new HashMap<String, Double>();
+		this.label=in.readDouble();//labelize_features
+		int id_size=in.readInt();
+		for(int i=0; i< id_size; i++){//id features
+			id_fea_vec.add(in.readUTF());
+		}
+		
+		int float_size=in.readInt();
+		for(int i=0; i< float_size; i++){
+			float_fea_vec.put(in.readUTF(), in.readDouble());
+		}
+		
+	}
+
+
+	@Override
+	public void write(DataOutput out) throws IOException {
+		//write double label
+		out.writeDouble(this.getLabel());
+		//write id_fea
+		out.writeInt(this.getIdFeatures().size());
+		for(String fea: this.getIdFeatures()){
+			out.writeUTF(fea);
+		}
+		
+		//write float fea
+		out.writeInt(this.getFloatFeatures().size());
+		for(Map.Entry<String, Double> mp: this.getFloatFeatures().entrySet()){
+			out.writeUTF(mp.getKey());
+			out.writeDouble(mp.getValue());
+		}
 		
 	}
 }

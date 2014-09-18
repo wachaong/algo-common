@@ -53,6 +53,13 @@ public class Features implements Cloneable {
 	public void setFeature(String feature_name, double value) {
 		float_features.put(feature_name, value);
 	}
+	public void setFeature(HashSet<String> id_feas) {
+		id_features = id_feas;
+	}
+	
+	public void setFeature(HashMap<String, Double> float_feas) {
+		float_features = float_feas;
+	}
 	
 	//set id feature
 	public void setFeature(String feature_name) {
