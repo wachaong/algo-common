@@ -84,6 +84,8 @@ public class Sample extends Features implements Writable {
 		for(int i=0; i< float_size; i++){
 			float_fea_vec.put(in.readUTF(), in.readDouble());
 		}
+		this.setFeature(id_fea_vec);
+		this.setFeature(float_fea_vec);
 		
 	}
 
